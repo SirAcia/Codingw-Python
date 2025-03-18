@@ -5,4 +5,4 @@ dash_auth
 plotly
 gunicorn
 flask
-python-dotmov
+python_dotenv
