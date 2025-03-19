@@ -57,21 +57,28 @@ def update_graph(selected_plot):
     """Dynamically updates the graph based on selection."""
     
     if selected_plot == 'violin':
-        # Create the Violin Plot
         fig = px.violin(
             generic,
             x="Generic_Name",
             y="Cost",
-            box=False,
-            points="all",
-            hover_data=["Year"],
-            color="Generic_Name",
-            title="Distribution of Generic Drug Costs"
+            box=False,  # Show boxplot inside the violin plot
+            points="all",  # Show individual data points
+            hover_data=["Year"],  # Add hover data for the year
+            color="Generic_Name",  # Different colors for each drug
+            title="Distribution of Generic Drug Costs",
+            width=10
         )
-        fig.update_layout(xaxis_title="Generic Drug", yaxis_title="Cost", xaxis_tickangle=-60)
+
+            # Customize layout
+            fig.update_layout(
+                xaxis_title="Generic Drug",
+                yaxis_title="Cost",
+                xaxis_tickangle=-60,  # Rotate x-axis labels for better readability
+                showlegend=False  # Hide legend to reduce clutter
+            )
     
     elif selected_plot == 'strip':
-        # Create Strip Plot
+        
         fig = px.strip(
             therapy,
             x="Volumes",
@@ -79,29 +86,33 @@ def update_graph(selected_plot):
             color="Therapy_Class",
             title="Distribution of Drug Claims Across Therapies"
         )
-        
-        # Compute conditional means
+
+        # Compute conditional means for each therapy class
         means = therapy.groupby("Therapy_Class")["Volumes"].mean().reset_index()
 
-        # Add point plot (conditional means)
+        # Add point plot for mean values (equivalent to sns.pointplot)
         fig.add_trace(
             go.Scatter(
                 x=means["Volumes"],
                 y=means["Therapy_Class"],
                 mode="markers",
-                marker=dict(symbol="diamond", size=8, color="black"),
-                name="Mean Volume"
+                marker=dict(symbol="diamond", size=8, color="black"),  # Match Seaborn's "d"
+                name="Mean Volume",
             )
         )
-        fig.update_layout(xaxis_title="Volume of Drug Claims, 2018-2024", yaxis_title="Therapeutic Area/Class")
+
+        # Update layout to match Seaborn aesthetics
+        fig.update_layout(
+            xaxis_title="Volume of Drug Claims, 2018-2024",
+            yaxis_title="Therapeutic Area/Class",
+            xaxis=dict(gridcolor="lightgray"),
+            yaxis=dict(gridcolor="lightgray"),
+            plot_bgcolor="white",
+            showlegend=False
+        )
 
     return fig
 
 # Run the app
 if __name__ == '__main__':
-    app.run(debug=True)
-
-
-
-    
-    app.run(debug=True)
+    app.run(debug=True, port=8090)
