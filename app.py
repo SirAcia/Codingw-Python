@@ -14,19 +14,43 @@ server = app.server
 
 url = 'https://github.com/SirAcia/Codingw-Python/blob/main/annual.csv'
 
-annual = pd.read_csv(url)
+# Setting file name for annual dataset
+filename = "/Users/zachery/Downloads/annual.csv"
 
-url = 'https://github.com/SirAcia/Codingw-Python/blob/main/generic.csv'
+# Loading annual dataset as a dataframe
+annual = pd.read_csv(filename, engine='python')
 
-generic = pd.read_csv(url)
+# Setting file name for generic drug dataset
+filename = "/Users/zachery/Downloads/generic.csv"
 
-url = 'https://github.com/SirAcia/Codingw-Python/blob/main/province.csv'
+# Loading generic dataset as a dataframe
+generic = pd.read_csv(filename, engine='python')
 
-province = pd.read_csv(url)
+# Setting file name for therapy dataset
+filename = "/Users/zachery/Downloads/therapy.csv"
 
-url = 'https://github.com/SirAcia/Codingw-Python/blob/main/therapy.csv'
+# Loading therapy dataset as a dataframe
+therapy = pd.read_csv(filename, engine='python')
 
-therapy = pd.read_csv(url)
+# Setting file name for provincial drug dataset
+filename = "/Users/zachery/Downloads/province.csv"
+
+# Loading provincial dataset as a dataframe
+province = pd.read_csv(filename, engine='python')
+
+#annual = pd.read_csv(url)
+
+#url = 'https://github.com/SirAcia/Codingw-Python/blob/main/generic.csv'
+
+#generic = pd.read_csv(url)
+
+#url = 'https://github.com/SirAcia/Codingw-Python/blob/main/province.csv'
+
+#province = pd.read_csv(url)
+
+#url = 'https://github.com/SirAcia/Codingw-Python/blob/main/therapy.csv'
+
+#therapy = pd.read_csv(url)
 
 # App layout
 app.layout = html.Div([
