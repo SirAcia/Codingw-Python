@@ -11,80 +11,97 @@ app = dash.Dash(__name__)
 
 server = app.server
 
-# Initial dataset
-datasets = {
-    "dataset1": {'categories': ['A', 'B', 'C', 'D'], 'values': [10, 15, 7, 12]},
-    "dataset2": {'categories': ['A', 'B', 'C', 'D'], 'values': [5, 10, 15, 20]}
-}
+url = 'https://github.com/SirAcia/Codingw-Python/blob/main/annual.csv'
 
-# Define the app layout
+annual = pd.read_csv(url)
+
+url = 'https://github.com/SirAcia/Codingw-Python/blob/main/generic.csv'
+
+generic = pd.read_csv(url)
+
+url = 'https://github.com/SirAcia/Codingw-Python/blob/main/province.csv'
+
+province = pd.read_csv(url)
+
+url = 'https://github.com/SirAcia/Codingw-Python/blob/main/therapy.csv'
+
+therapy = pd.read_csv(url)
+
+# App layout
 app.layout = html.Div([
-    html.H1("Interactive Line & Pie Charts"),
-    
-    # Dropdown for dataset selection
+    html.H1("Interactive Drug Cost & Volume Distribution"),
+
+    # Dropdown for selecting the plot type
     dcc.Dropdown(
-        id='data-selector',
+        id='plot-selector',
         options=[
-            {'label': 'Dataset 1', 'value': 'dataset1'},
-            {'label': 'Dataset 2', 'value': 'dataset2'}
+            {'label': 'Violin Plot (Drug Cost Distribution)', 'value': 'violin'},
+            {'label': 'Strip & Point Plot (Therapy Volumes)', 'value': 'strip'}
         ],
-        value='dataset1',
-        clearable=False
+        value='violin',  # Default selection
+        clearable=False,
+        style={'width': '50%'}
     ),
-    
-    # Sliders for dynamic value adjustments
-    html.Div([
-        html.Label("Adjust A"),
-        dcc.Slider(id='slider-A', min=0, max=30, step=1, value=10, marks={i: str(i) for i in range(0, 31, 5)}),
-        
-        html.Label("Adjust B"),
-        dcc.Slider(id='slider-B', min=0, max=30, step=1, value=15, marks={i: str(i) for i in range(0, 31, 5)}),
 
-        html.Label("Adjust C"),
-        dcc.Slider(id='slider-C', min=0, max=30, step=1, value=7, marks={i: str(i) for i in range(0, 31, 5)}),
-
-        html.Label("Adjust D"),
-        dcc.Slider(id='slider-D', min=0, max=30, step=1, value=12, marks={i: str(i) for i in range(0, 31, 5)}),
-    ]),
-
-    # Graphs for line and pie charts
-    html.Div([
-        dcc.Graph(id='line-chart', style={'width': '48%', 'display': 'inline-block'}),
-        dcc.Graph(id='pie-chart', style={'width': '48%', 'display': 'inline-block'})
-    ])
+    # Graph container
+    dcc.Graph(id='main-plot')
 ])
 
-# Callback to update both charts based on dropdown and slider values
+# Callback to update the graph based on the selected plot
 @app.callback(
-    [Output('line-chart', 'figure'),
-     Output('pie-chart', 'figure')],
-    [Input('data-selector', 'value'),
-     Input('slider-A', 'value'),
-     Input('slider-B', 'value'),
-     Input('slider-C', 'value'),
-     Input('slider-D', 'value')]
+    Output('main-plot', 'figure'),
+    [Input('plot-selector', 'value')]
 )
-def update_graphs(selected_dataset, a, b, c, d):
-    """Updates the charts based on selected dataset and slider values."""
+def update_graph(selected_plot):
+    """Dynamically updates the graph based on selection."""
     
-    # Get categories from the selected dataset
-    categories = datasets[selected_dataset]['categories']
+    if selected_plot == 'violin':
+        # Create the Violin Plot
+        fig = px.violin(
+            generic,
+            x="Generic_Name",
+            y="Cost",
+            box=False,
+            points="all",
+            hover_data=["Year"],
+            color="Generic_Name",
+            title="Distribution of Generic Drug Costs"
+        )
+        fig.update_layout(xaxis_title="Generic Drug", yaxis_title="Cost", xaxis_tickangle=-60)
     
-    # Use slider values as updated dataset values
-    values = [a, b, c, d]
-    
-    # Create Line Chart
-    line_fig = go.Figure()
-    line_fig.add_trace(go.Scatter(x=categories, y=values, mode='lines+markers', name=selected_dataset))
-    line_fig.update_layout(title="Line Chart", xaxis_title="Category", yaxis_title="Values")
+    elif selected_plot == 'strip':
+        # Create Strip Plot
+        fig = px.strip(
+            therapy,
+            x="Volumes",
+            y="Therapy_Class",
+            color="Therapy_Class",
+            opacity=0.25,
+            title="Distribution of Drug Claims Across Therapies"
+        )
+        
+        # Compute conditional means
+        means = therapy.groupby("Therapy_Class")["Volumes"].mean().reset_index()
 
-    # Create Pie Chart
-    pie_fig = go.Figure()
-    pie_fig.add_trace(go.Pie(labels=categories, values=values, name=selected_dataset))
-    pie_fig.update_layout(title="Pie Chart")
-    
-    return line_fig, pie_fig
+        # Add point plot (conditional means)
+        fig.add_trace(
+            go.Scatter(
+                x=means["Volumes"],
+                y=means["Therapy_Class"],
+                mode="markers",
+                marker=dict(symbol="diamond", size=8, color="black"),
+                name="Mean Volume"
+            )
+        )
+        fig.update_layout(xaxis_title="Volume of Drug Claims, 2018-2024", yaxis_title="Therapeutic Area/Class")
+
+    return fig
 
 # Run the app
 if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+    
     app.run(debug=True)
