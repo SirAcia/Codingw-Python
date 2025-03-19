@@ -12,19 +12,19 @@ app = dash.Dash(__name__)
 
 server = app.server
 
-url = 'https://github.com/SirAcia/Codingw-Python/blob/main/annual.csv'
+url = 'https://raw.githubusercontent.com/SirAcia/Codingw-Python/main/annual.csv'
 
 annual = pd.read_csv(url, delimiter=',')
 
-url = 'https://github.com/SirAcia/Codingw-Python/blob/main/generic.csv'
+url = 'https://raw.githubusercontent.com/SirAcia/Codingw-Python/main/generic.csv'
 
 generic = pd.read_csv(url, delimiter=',')
 
-url = 'https://github.com/SirAcia/Codingw-Python/blob/main/province.csv'
+url = 'https://raw.githubusercontent.com/SirAcia/Codingw-Python/main/province.csv'
 
 province = pd.read_csv(url, delimiter=',')
 
-url = 'https://github.com/SirAcia/Codingw-Python/blob/main/therapy.csv'
+url = 'https://raw.githubusercontent.com/SirAcia/Codingw-Python/main/therapy.csv'
 
 therapy = pd.read_csv(url, delimiter=',')
 
