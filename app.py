@@ -77,7 +77,6 @@ def update_graph(selected_plot):
             x="Volumes",
             y="Therapy_Class",
             color="Therapy_Class",
-            opacity=0.25,
             title="Distribution of Drug Claims Across Therapies"
         )
         
