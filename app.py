@@ -14,19 +14,19 @@ server = app.server
 
 url = 'https://github.com/SirAcia/Codingw-Python/blob/main/annual.csv'
 
-annual = pd.read_csv(url)
+annual = pd.read_csv(url, delimiter=',')
 
 url = 'https://github.com/SirAcia/Codingw-Python/blob/main/generic.csv'
 
-generic = pd.read_csv(url)
+generic = pd.read_csv(url, delimiter=',')
 
 url = 'https://github.com/SirAcia/Codingw-Python/blob/main/province.csv'
 
-province = pd.read_csv(url)
+province = pd.read_csv(url, delimiter=',')
 
 url = 'https://github.com/SirAcia/Codingw-Python/blob/main/therapy.csv'
 
-therapy = pd.read_csv(url)
+therapy = pd.read_csv(url, delimiter=',')
 
 # Setting file name for annual dataset
 #filename = "/Users/zachery/Downloads/annual.csv"
